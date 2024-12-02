@@ -23,6 +23,6 @@ public:
 // Function declarations
 size_t write_callback(char* ptr, size_t size, size_t nmemb, void* userdata);
 std::string joinArray(const nlohmann::json& array, const std::string& key);
-void fetchGames(std::vector<Game>& allGames);
+void getGamesList(std::vector<Game>& allGames);
 
 #endif
