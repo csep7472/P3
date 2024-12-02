@@ -42,7 +42,7 @@ std::vector<Game> getGamesList() {
         headers = curl_slist_append(headers, "Client-ID: fb89fyfzjfsfqmfmre5akrssfnfdyq");
         headers = curl_slist_append(headers, "Authorization: Bearer nddadgrn6sj42d7feurnu84d0cnkih");
 
-        int limit = 10;  
+        int limit = 500;  
         int offset = 0;   
         bool moreResults = true;
 
@@ -119,7 +119,7 @@ std::vector<Game> getGamesList() {
             if (offset >= 15000) {
                 moreResults = false;
             }
-            sleep_for(1.5s);
+            sleep_for(0.5s); //included because there is a max amount of requests per second and dont want to exceed it
         }
 
         curl_easy_cleanup(curl);
