@@ -32,9 +32,10 @@ std::string joinArray(const nlohmann::json& array, const std::string& key) {
 }
 
 // Fetch games data from the API
-void getGamesList(std::vector<Game>& allGames) {
+std::vector<Game> getGamesList() {
     std::string output;
     CURL* curl = curl_easy_init();
+    std::vector<Game> allGames;
 
     if (curl) {
         struct curl_slist* headers = NULL;
@@ -115,12 +116,13 @@ void getGamesList(std::vector<Game>& allGames) {
                     break;
                 }
             }
-            if (offset >= 30) {
+            if (offset >= 15000) {
                 moreResults = false;
             }
             sleep_for(1.5s);
         }
 
         curl_easy_cleanup(curl);
+        return allGames;
     }
 }
