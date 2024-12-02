@@ -1,32 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include "splay.h"
+#include "api.h"
 
 using namespace std;
 
-struct Game {
-    string name;
-    vector<string> platforms;
-    vector<string> genres;
-    int releaseYear = 0;
-    vector<string> gameModes;
-    vector<string> perspectives;
-};
-
-
-vector<Game> loadGameDataFromAPI() {
-    // Fetch and parse API data, populate `Game` structs, and return as a vector.
-    vector<Game> games;
-    return games;
-}
-
-unordered_map<string, Game> loadMap(vector<Game>& games) {
-    unordered_map<string, Game> gameMap;
-    for (const auto &game: games) {
-        gameMap[game.name] = game;
-    }
-    return gameMap;
-}
 
 vector<string> evaluateGuess(unordered_map<string, Game> gameMap, string& userGuess, Game& correctGame) {
     // Vector that stores results for name, platforms, genre, release year, game modes, and perspectives in that order
@@ -141,6 +123,12 @@ vector<string> evaluateGuess(unordered_map<string, Game> gameMap, string& userGu
 }
 
 int main() {
+    vector<Game> allGames = getGamesList();
+    SplayTree tree;
+    for (const auto& game : allGames) {
+        tree.insert(game);
+    }
+    cout << allGames.size() << endl;
     // Rough Outline
     // Load video game data api into an unordered map
     // set up trie

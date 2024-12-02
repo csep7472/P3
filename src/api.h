@@ -17,7 +17,7 @@ public:
     int releaseYear = 0;              
 
     // Nlohmann JSON serialization support
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Game, rating, name, genres, platforms, perspectives, gameModes, releaseYear)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Game, rating, name, genres, platforms, perspectives, gameModes, releaseYear);
 };
 
 // Function declarations

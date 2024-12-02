@@ -1,0 +1,5 @@
+"C:\Program Files\JetBrains\CLion 2024.1.4\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.1.4/bin/ninja/win/x64/ninja.exe" -DCMAKE_TOOLCHAIN_FILE=C:\Users\liand\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-mingw-dynamic -G Ninja -S C:\Users\liand\CLionProjects\Project-3-Video-Game-Wordle\Project-3-Video-Game-Wordle -B C:\Users\liand\CLionProjects\Project-3-Video-Game-Wordle\Project-3-Video-Game-Wordle\cmake-build-debug
+-- Found ZLIB: optimized;C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mingw-dynamic/lib/libzlib.dll.a;debug;C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mingw-dynamic/debug/lib/libzlibd.dll.a (found suitable version "1.3.1", minimum required is "1")  
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/liand/CLionProjects/Project-3-Video-Game-Wordle/Project-3-Video-Game-Wordle/cmake-build-debug
