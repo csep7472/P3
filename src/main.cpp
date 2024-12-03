@@ -3,9 +3,12 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
-#include <algorithm>
 #include "splay.h"
 #include "api.h"
+#include <SFML/Graphics.hpp>
+#include <chrono>
+
+#include "GUI.h"
 
 using namespace std;
 
@@ -124,17 +127,90 @@ vector<string> evaluateGuess(unordered_map<string, Game> gameMap, string& userGu
 
 int main() {
     vector<Game> allGames = getGamesList();
-    SplayTree tree;
-    for (const auto& game : allGames) {
-        tree.insert(game);
+    SplayTree splaytree;
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle");
+
+    // gets window size to dynamically adjust text and button locations
+    sf::Vector2u windowSize = window.getSize();
+
+    // creating and setting position for title text
+    TextDisplay title("Video Game Wordle", 50,  sf::Vector2f(0, 0), sf::Color::Black);
+    sf::FloatRect titleRect = title.getText().getLocalBounds();
+    float centerX = (windowSize.x - titleRect.width) / 2;
+    title.setPosition(sf::Vector2f(centerX-10, windowSize.y * 0.1f));
+
+    // creating and setting position for Splay Tree and Hash Map text
+    TextDisplay splayText("Splay Tree", 30, sf::Vector2f(centerX, windowSize.y * 0.5f), sf::Color::Black);
+    TextDisplay hashText("Hash Map", 30, sf::Vector2f(centerX + titleRect.width, windowSize.y * 0.5f), sf::Color::Black);
+    sf::FloatRect hashRect = hashText.getText().getLocalBounds();
+    hashText.setPosition(sf::Vector2f(centerX + titleRect.width - hashRect.width, windowSize.y * 0.5f));
+
+    TextDisplay welcomeText("Select a Game Mode: ", 40, sf::Vector2f(centerX, windowSize.y * 0.3f), sf::Color::Black);
+    sf::FloatRect welcomeTextRect = welcomeText.getText().getLocalBounds();
+    float welcomeCenter = (windowSize.x - welcomeTextRect.width) / 2;
+    welcomeText.setPosition(sf::Vector2f(welcomeCenter, windowSize.y * 0.3));
+
+    // creates and positions boxes for splay and hash mode
+    sf::RectangleShape splayBox(sf::Vector2f(splayText.getText().getLocalBounds().width + 20, 40));
+    splayBox.setPosition(centerX - 10, windowSize.y * 0.5f);
+    splayBox.setFillColor(sf::Color::Green);
+    sf::RectangleShape hashBox(sf::Vector2f(hashText.getText().getLocalBounds().width + 20, 40));
+    hashBox.setPosition(centerX + titleRect.width - hashRect.width - 10, windowSize.y * 0.5f);
+    hashBox.setFillColor(sf::Color::Blue);
+
+
+    bool gameStarted = false;
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                // reference: https://gamedev.stackexchange.com/questions/142308/how-to-create-a-button-in-sfml
+                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                sf::Vector2f mousePosF( static_cast<float>( mousePos.x ), static_cast<float>( mousePos.y ) );
+                chrono::duration<double> time;
+                if (splayBox.getGlobalBounds().contains(mousePosF) && !gameStarted) {
+                    auto start = chrono::high_resolution_clock::now();
+                    for (const auto& game : allGames) {
+                            splaytree.insert(game);
+                    }
+                    auto end = chrono::high_resolution_clock::now();
+                    time = end - start;
+                    gameStarted = true;
+                }
+
+                else if (hashBox.getGlobalBounds().contains(mousePosF) && !gameStarted) {
+                    auto start = chrono::high_resolution_clock::now();
+                    for (const auto& game : allGames) {
+                        // insert into hashmap
+                    }
+                    auto end = chrono::high_resolution_clock::now();
+                    time = end - start;
+                    gameStarted = true;
+                }
+
+                cout << "time to insert all games: " << time.count() << " seconds." << endl;
+            }
+        }
+
+
+        if (gameStarted) {
+            window.clear(sf::Color::White);
+            window.display();
+        }
+        else {
+            window.clear(sf::Color::Cyan);
+            window.draw(splayBox);
+            window.draw(hashBox);
+            title.draw(window);
+            welcomeText.draw(window);
+            splayText.draw(window);
+            hashText.draw(window);
+            window.display();
+        }
     }
-    cout << allGames.size() << endl;
-    // Rough Outline
-    // Load video game data api into an unordered map
-    // set up trie
-    // receive user's guess
-    // evaluate guess
-    // display output on interface
-    // compare results using an unordered map and another data structure. A trie will be used in both.
     return 0;
 }

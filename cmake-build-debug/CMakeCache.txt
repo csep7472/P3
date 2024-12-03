@@ -119,7 +119,7 @@ CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/VideoGameWordle
 CMAKE_LINKER:FILEPATH=C:/mingw64/bin/ld.exe
 
 //make program
-CMAKE_MAKE_PROGRAM:FILEPATH=C:/PROGRA~1/JETBRA~1/CLION2~1.4/bin/ninja/win/x64/ninja.exe
+CMAKE_MAKE_PROGRAM:FILEPATH=C:/Program Files/JetBrains/CLion 2024.1.4/bin/ninja/win/x64/ninja.exe
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -251,6 +251,21 @@ CURL_DIR:PATH=C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mingw-dynamic/shar
 //Enable pkg-config to detect CURL dependencies
 CURL_USE_PKGCONFIG:BOOL=ON
 
+//Path to a library.
+FLAC_LIB:FILEPATH=C:/SFML/lib/libFLAC.a
+
+//Path to a library.
+FreeType_LIB:FILEPATH=C:/SFML/lib/libfreetype.a
+
+//Path to a library.
+Ogg_LIB:FILEPATH=C:/SFML/lib/libogg.a
+
+//Path to a library.
+OpenAL_LIB:FILEPATH=C:/SFML/lib/libopenal32.a
+
+//Path to a file.
+SFML_DOC_DIR:PATH=SFML_DOC_DIR-NOTFOUND
+
 //Automatically copy dependencies into the output directory for
 // executables.
 VCPKG_APPLOCAL_DEPS:BOOL=ON
@@ -290,6 +305,15 @@ VideoGameWordle_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 VideoGameWordle_SOURCE_DIR:STATIC=C:/Users/liand/CLionProjects/Project-3-Video-Game-Wordle/Project-3-Video-Game-Wordle
+
+//Path to a library.
+VorbisEnc_LIB:FILEPATH=C:/SFML/lib/libvorbisenc.a
+
+//Path to a library.
+VorbisFile_LIB:FILEPATH=C:/SFML/lib/libvorbisfile.a
+
+//Path to a library.
+Vorbis_LIB:FILEPATH=C:/SFML/lib/libvorbis.a
 
 //(experimental) Automatically copy dependencies into the install
 // target directory for executables. Requires CMake 3.14.
@@ -494,6 +518,14 @@ CURL_LIBRARY_RELEASE:INTERNAL=C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mi
 FIND_PACKAGE_MESSAGE_DETAILS_ZLIB:INTERNAL=[optimized;C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mingw-dynamic/lib/libzlib.dll.a;debug;C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mingw-dynamic/debug/lib/libzlibd.dll.a][C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mingw-dynamic/include][c ][v1.3.1(1)]
 //Details about finding nlohmann_json
 FIND_PACKAGE_MESSAGE_DETAILS_nlohmann_json:INTERNAL=[C:/Users/liand/.vcpkg-clion/vcpkg/installed/x64-mingw-dynamic/share/nlohmann_json/nlohmann_jsonConfig.cmake][v3.11.3()]
+//ADVANCED property for variable: FLAC_LIB
+FLAC_LIB-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: FreeType_LIB
+FreeType_LIB-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Ogg_LIB
+Ogg_LIB-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenAL_LIB
+OpenAL_LIB-ADVANCED:INTERNAL=1
 //Install the dependencies listed in your manifest:
 //\n    If this is off, you will have to manually install your dependencies.
 //\n    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md
@@ -502,6 +534,12 @@ FIND_PACKAGE_MESSAGE_DETAILS_nlohmann_json:INTERNAL=[C:/Users/liand/.vcpkg-clion
 VCPKG_MANIFEST_INSTALL:INTERNAL=OFF
 //ADVANCED property for variable: VCPKG_VERBOSE
 VCPKG_VERBOSE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: VorbisEnc_LIB
+VorbisEnc_LIB-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: VorbisFile_LIB
+VorbisFile_LIB-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Vorbis_LIB
+Vorbis_LIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ZLIB_INCLUDE_DIR
 ZLIB_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ZLIB_LIBRARY_DEBUG

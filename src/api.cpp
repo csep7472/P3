@@ -116,7 +116,7 @@ std::vector<Game> getGamesList() {
                     break;
                 }
             }
-            if (offset >= 15000) {
+            if (offset >= 500) {
                 moreResults = false;
             }
             sleep_for(0.5s); //included because there is a max amount of requests per second and dont want to exceed it
