@@ -128,25 +128,25 @@ vector<string> evaluateGuess(unordered_map<string, Game> gameMap, string& userGu
 int main() {
     vector<Game> allGames = getGamesList();
     SplayTree splaytree;
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle");
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle", sf::Style::Fullscreen);
 
     // gets window size to dynamically adjust text and button locations
     sf::Vector2u windowSize = window.getSize();
 
     // creating and setting position for title text
     TextDisplay title("Video Game Wordle", 50,  sf::Vector2f(0, 0), sf::Color::Black);
-    sf::FloatRect titleRect = title.getText().getLocalBounds();
+    sf::FloatRect titleRect = title.getText().getGlobalBounds();
     float centerX = (windowSize.x - titleRect.width) / 2;
     title.setPosition(sf::Vector2f(centerX-10, windowSize.y * 0.1f));
 
     // creating and setting position for Splay Tree and Hash Map text
     TextDisplay splayText("Splay Tree", 30, sf::Vector2f(centerX, windowSize.y * 0.5f), sf::Color::Black);
     TextDisplay hashText("Hash Map", 30, sf::Vector2f(centerX + titleRect.width, windowSize.y * 0.5f), sf::Color::Black);
-    sf::FloatRect hashRect = hashText.getText().getLocalBounds();
+    sf::FloatRect hashRect = hashText.getText().getGlobalBounds();
     hashText.setPosition(sf::Vector2f(centerX + titleRect.width - hashRect.width, windowSize.y * 0.5f));
 
     TextDisplay welcomeText("Select a Game Mode: ", 40, sf::Vector2f(centerX, windowSize.y * 0.3f), sf::Color::Black);
-    sf::FloatRect welcomeTextRect = welcomeText.getText().getLocalBounds();
+    sf::FloatRect welcomeTextRect = welcomeText.getText().getGlobalBounds();
     float welcomeCenter = (windowSize.x - welcomeTextRect.width) / 2;
     welcomeText.setPosition(sf::Vector2f(welcomeCenter, windowSize.y * 0.3));
 
@@ -158,12 +158,14 @@ int main() {
     hashBox.setPosition(centerX + titleRect.width - hashRect.width - 10, windowSize.y * 0.5f);
     hashBox.setFillColor(sf::Color::Blue);
 
+    // create and position time it takes to insert
+    TextDisplay insertTime("time to insert all games: ", 20, sf::Vector2f(0, windowSize.y - 30), sf::Color::Black);
 
     bool gameStarted = false;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
 
@@ -191,14 +193,14 @@ int main() {
                     time = end - start;
                     gameStarted = true;
                 }
-
-                cout << "time to insert all games: " << time.count() << " seconds." << endl;
+                insertTime.setText("time to insert all games: " + to_string(time.count()) + "s");
             }
         }
 
 
         if (gameStarted) {
             window.clear(sf::Color::White);
+            insertTime.draw(window);
             window.display();
         }
         else {

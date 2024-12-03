@@ -54,13 +54,13 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 27,
+				"line" : 28,
 				"parent" : 0
 			},
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 26,
+				"line" : 27,
 				"parent" : 0
 			},
 			{
@@ -198,7 +198,7 @@
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 32,
+				"line" : 33,
 				"parent" : 0
 			},
 			{
@@ -242,7 +242,7 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 30,
+				"line" : 31,
 				"parent" : 0
 			}
 		]
@@ -428,7 +428,8 @@
 			[
 				1,
 				2,
-				4
+				4,
+				5
 			]
 		}
 	],
@@ -459,6 +460,11 @@
 		{
 			"backtrace" : 2,
 			"path" : "src/GUI.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "src/hashmap.h",
 			"sourceGroupIndex" : 1
 		}
 	],
