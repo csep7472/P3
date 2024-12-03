@@ -5,148 +5,126 @@
 #include <string>
 #include "splay.h"
 #include "api.h"
+#include "GUI.h"
 #include <SFML/Graphics.hpp>
 #include <chrono>
-
-#include "GUI.h"
+#include "hashmap.h"
 
 using namespace std;
 
-
-vector<string> evaluateGuess(unordered_map<string, Game> gameMap, string& userGuess, Game& correctGame) {
-    // Vector that stores results for name, platforms, genre, release year, game modes, and perspectives in that order
+vector<string> evaluateGuess(HashMap<string, Game>& gameMap, string& userGuess, Game& correctGame) {
     vector<string> results;
-    // To compare:
+
+    // Name comparison
     if (gameMap[userGuess].name == correctGame.name) {
         cout << "Name is correct!" << endl;
         results.emplace_back("green");
-    }
-    else {
+    } else {
         results.emplace_back("red");
     }
-    // Need to make this iterate through the vector and determine if results should be red, yellow, or green
+
+    // Platforms comparison
     if (gameMap[userGuess].platforms == correctGame.platforms) {
         cout << "Platforms are correct!" << endl;
         results.emplace_back("green");
-    }
-    else {
+    } else {
         int matches = 0;
-        for (const auto &guessPlatform: gameMap[userGuess].platforms) {
-            for (const auto &correctPlatform: correctGame.platforms) {
+        for (const auto& guessPlatform : gameMap[userGuess].platforms) {
+            for (const auto& correctPlatform : correctGame.platforms) {
                 if (guessPlatform == correctPlatform)
-                    matches += 1;
+                    matches++;
             }
         }
-        if (matches > 0) {
-            results.emplace_back("yellow");
-            cout << "At least one platform matches!" << endl;
-        }
-        else {
-            results.emplace_back("red");
-            cout << "No platforms match" << endl;
-        }
+        results.emplace_back(matches > 0 ? "yellow" : "red");
+        cout << (matches > 0 ? "At least one platform matches!" : "No platforms match") << endl;
     }
-    // Do the same for genres
+
+    // Genres comparison
     if (gameMap[userGuess].genres == correctGame.genres) {
         cout << "Genres are correct!" << endl;
         results.emplace_back("green");
-    }
-    else {
+    } else {
         int matches = 0;
-        for (const auto &guessGenre: gameMap[userGuess].genres) {
-            for (const auto &correctGenre: correctGame.genres) {
+        for (const auto& guessGenre : gameMap[userGuess].genres) {
+            for (const auto& correctGenre : correctGame.genres) {
                 if (guessGenre == correctGenre)
-                    matches += 1;
+                    matches++;
             }
         }
-        if (matches > 0) {
-            results.emplace_back("yellow");
-            cout << "At least one genre matches!" << endl;
-        }
-        else {
-            results.emplace_back("red");
-            cout << "No genres match" << endl;
-        }
+        results.emplace_back(matches > 0 ? "yellow" : "red");
+        cout << (matches > 0 ? "At least one genre matches!" : "No genres match") << endl;
     }
+
+    // Release year comparison
     if (gameMap[userGuess].releaseYear == correctGame.releaseYear) {
         results.emplace_back("equal");
         cout << "The release year is correct!" << endl;
-    }
-    else if (gameMap[userGuess].releaseYear < correctGame.releaseYear) {
+    } else if (gameMap[userGuess].releaseYear < correctGame.releaseYear) {
         results.emplace_back("up");
         cout << "The release year of the guessed game is older than the correct game" << endl;
-    }
-    else {
+    } else {
         results.emplace_back("down");
         cout << "The release year of the guessed game is newer than the correct game" << endl;
     }
+
+    // Game modes comparison
     if (gameMap[userGuess].gameModes == correctGame.gameModes) {
         cout << "Game modes are correct!" << endl;
         results.emplace_back("green");
-    }
-    else {
+    } else {
         int matches = 0;
-        for (const auto &guessGameMode: gameMap[userGuess].gameModes) {
-            for (const auto &correctGameMode: correctGame.gameModes) {
-                if (guessGameMode == correctGameMode)
-                    matches += 1;
+        for (const auto& guessMode : gameMap[userGuess].gameModes) {
+            for (const auto& correctMode : correctGame.gameModes) {
+                if (guessMode == correctMode)
+                    matches++;
             }
         }
-        if (matches > 0) {
-            results.emplace_back("yellow");
-            cout << "At least one game mode matches!" << endl;
-        }
-        else {
-            results.emplace_back("red");
-            cout << "No game modes match" << endl;
-        }
+        results.emplace_back(matches > 0 ? "yellow" : "red");
+        cout << (matches > 0 ? "At least one game mode matches!" : "No game modes match") << endl;
     }
+
+    // Perspectives comparison
     if (gameMap[userGuess].perspectives == correctGame.perspectives) {
         cout << "Perspectives are correct!" << endl;
         results.emplace_back("green");
-    }
-    else {
+    } else {
         int matches = 0;
-        for (const auto &guessPerspective: gameMap[userGuess].perspectives) {
-            for (const auto &correctPerspective: correctGame.perspectives) {
+        for (const auto& guessPerspective : gameMap[userGuess].perspectives) {
+            for (const auto& correctPerspective : correctGame.perspectives) {
                 if (guessPerspective == correctPerspective)
-                    matches += 1;
+                    matches++;
             }
         }
-        if (matches > 0) {
-            results.emplace_back("yellow");
-            cout << "At least one perspective matches!" << endl;
-        }
-        else {
-            results.emplace_back("red");
-            cout << "No perspectives match" << endl;
-        }
+        results.emplace_back(matches > 0 ? "yellow" : "red");
+        cout << (matches > 0 ? "At least one perspective matches!" : "No perspectives match") << endl;
     }
+
     return results;
 }
 
 int main() {
     vector<Game> allGames = getGamesList();
     SplayTree splaytree;
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle", sf::Style::Fullscreen);
+    HashMap<string, Game> gameMap(100);  // Create a HashMap with 100 buckets
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle");
 
     // gets window size to dynamically adjust text and button locations
     sf::Vector2u windowSize = window.getSize();
 
     // creating and setting position for title text
     TextDisplay title("Video Game Wordle", 50,  sf::Vector2f(0, 0), sf::Color::Black);
-    sf::FloatRect titleRect = title.getText().getGlobalBounds();
+    sf::FloatRect titleRect = title.getText().getLocalBounds();
     float centerX = (windowSize.x - titleRect.width) / 2;
     title.setPosition(sf::Vector2f(centerX-10, windowSize.y * 0.1f));
 
     // creating and setting position for Splay Tree and Hash Map text
     TextDisplay splayText("Splay Tree", 30, sf::Vector2f(centerX, windowSize.y * 0.5f), sf::Color::Black);
     TextDisplay hashText("Hash Map", 30, sf::Vector2f(centerX + titleRect.width, windowSize.y * 0.5f), sf::Color::Black);
-    sf::FloatRect hashRect = hashText.getText().getGlobalBounds();
+    sf::FloatRect hashRect = hashText.getText().getLocalBounds();
     hashText.setPosition(sf::Vector2f(centerX + titleRect.width - hashRect.width, windowSize.y * 0.5f));
 
     TextDisplay welcomeText("Select a Game Mode: ", 40, sf::Vector2f(centerX, windowSize.y * 0.3f), sf::Color::Black);
-    sf::FloatRect welcomeTextRect = welcomeText.getText().getGlobalBounds();
+    sf::FloatRect welcomeTextRect = welcomeText.getText().getLocalBounds();
     float welcomeCenter = (windowSize.x - welcomeTextRect.width) / 2;
     welcomeText.setPosition(sf::Vector2f(welcomeCenter, windowSize.y * 0.3));
 
@@ -177,7 +155,7 @@ int main() {
                 if (splayBox.getGlobalBounds().contains(mousePosF) && !gameStarted) {
                     auto start = chrono::high_resolution_clock::now();
                     for (const auto& game : allGames) {
-                            splaytree.insert(game);
+                        splaytree.insert(game);
                     }
                     auto end = chrono::high_resolution_clock::now();
                     time = end - start;
@@ -187,7 +165,7 @@ int main() {
                 else if (hashBox.getGlobalBounds().contains(mousePosF) && !gameStarted) {
                     auto start = chrono::high_resolution_clock::now();
                     for (const auto& game : allGames) {
-                        // insert into hashmap
+                        gameMap[game.name] = game;  // Insert into custom HashMap
                     }
                     auto end = chrono::high_resolution_clock::now();
                     time = end - start;
@@ -214,5 +192,6 @@ int main() {
             window.display();
         }
     }
+
     return 0;
 }
