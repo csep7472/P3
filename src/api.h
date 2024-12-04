@@ -9,11 +9,11 @@
 class Game {
 public:
     double rating = 0.0;              
-    std::string name;
-    std::vector<std::string> genres;
-    std::vector<std::string> platforms;
-    std::vector<std::string> perspectives;
-    std::vector<std::string> gameModes;
+    std::string name;                 
+    std::string genres;               
+    std::string platforms;            
+    std::string perspectives;         
+    std::string gameModes;            
     int releaseYear = 0;              
 
     // Nlohmann JSON serialization support
