@@ -1,94 +1,95 @@
-//
-// Created by david on 12/2/2024.
-//
-
-#ifndef WORDLEPROJECT_HASHMAP_H
-#define WORDLEPROJECT_HASHMAP_H
-
 #ifndef HASHMAP_H
 #define HASHMAP_H
 
 #include <vector>
 #include <list>
-#include <utility>
-#include <stdexcept>
-#include <algorithm>
+#include <string>
+#include <functional> // for std::hash
 
-template <typename K, typename V>
+template <typename Key, typename Value>
 class HashMap {
 private:
-    // Pair to store key-value
-    using Pair = std::pair<K, V>;
+    struct Entry {
+        Key key;
+        Value value;
+    };
 
-    // Bucket (list of pairs)
-    using Bucket = std::list<Pair>;
+    std::vector<std::list<Entry>> table; // Hash table with chaining for collision handling
+    size_t numBuckets;                   // Number of buckets in the hash table
+    size_t numElements;                  // Number of elements currently in the hash map
 
-    // Vector of buckets
-    std::vector<Bucket> table;
-
-    // Number of elements
-    size_t numElements;
-
-    // Hash function
-    size_t hash(const K& key) const {
-        return std::hash<K>{}(key) % table.size();
-    }
-
-    // Find a key in a bucket
-    typename Bucket::iterator findInBucket(Bucket& bucket, const K& key) {
-        return std::find_if(bucket.begin(), bucket.end(),
-                            [&key](const Pair& p) { return p.first == key; });
+    // Hash function to map keys to indices
+    size_t getBucketIndex(const Key& key) const {
+        return std::hash<Key>()(key) % numBuckets;
     }
 
 public:
-    // Constructor
-    explicit HashMap(size_t size = 16) : table(size), numElements(0) {}
+    // Default constructor
+    HashMap(size_t initialCapacity = 16)
+            : numBuckets(initialCapacity), numElements(0) {
+        table.resize(numBuckets);
+    }
 
-    // Overload [] for insertion and access
-    V& operator[](const K& key) {
-        size_t index = hash(key);
-        Bucket& bucket = table[index];
+    // Insert a key-value pair into the hash map
+    void insert(const Key& key, const Value& value) {
+        size_t bucketIndex = getBucketIndex(key);
+        for (auto& entry : table[bucketIndex]) {
+            if (entry.key == key) {
+                entry.value = value; // Update existing value
+                return;
+            }
+        }
+        table[bucketIndex].push_back({key, value});
+        numElements++;
+    }
 
-        auto it = findInBucket(bucket, key);
-        if (it == bucket.end()) {
-            bucket.emplace_back(key, V{}); // Insert default value if key not found
-            ++numElements;
-            return bucket.back().second;
-        } else {
-            return it->second; // Return value if key found
+    // Retrieve a value by key
+    Value& operator[](const Key& key) {
+        size_t bucketIndex = getBucketIndex(key);
+        for (auto& entry : table[bucketIndex]) {
+            if (entry.key == key) {
+                return entry.value;
+            }
+        }
+        // Insert default value if key is not found
+        table[bucketIndex].push_back({key, Value()});
+        numElements++;
+        return table[bucketIndex].back().value;
+    }
+
+    // Check if a key exists in the hash map
+    bool contains(const Key& key) const {
+        size_t bucketIndex = getBucketIndex(key);
+        for (const auto& entry : table[bucketIndex]) {
+            if (entry.key == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Remove a key-value pair by key
+    void erase(const Key& key) {
+        size_t bucketIndex = getBucketIndex(key);
+        auto& bucket = table[bucketIndex];
+        for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+            if (it->key == key) {
+                bucket.erase(it);
+                numElements--;
+                return;
+            }
         }
     }
 
-    // Get value by key (const version)
-    const V& operator[](const K& key) const {
-        size_t index = hash(key);
-        const Bucket& bucket = table[index];
-
-        auto it = std::find_if(bucket.begin(), bucket.end(),
-                               [&key](const Pair& p) { return p.first == key; });
-
-        if (it == bucket.end()) {
-            throw std::out_of_range("Key not found");
-        } else {
-            return it->second;
-        }
-    }
-
-    // Get number of elements
+    // Get the number of elements in the hash map
     size_t size() const {
         return numElements;
     }
 
-    // Clear the hashmap
-    void clear() {
-        for (auto& bucket : table) {
-            bucket.clear();
-        }
-        numElements = 0;
+    // Get the number of buckets in the hash map
+    size_t capacity() const {
+        return numBuckets;
     }
 };
 
 #endif // HASHMAP_H
-
-
-#endif //WORDLEPROJECT_HASHMAP_H

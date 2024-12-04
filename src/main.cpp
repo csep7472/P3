@@ -499,7 +499,7 @@ int main() {
                                 else {
                                     displayColor = sf::Color::Red;
                                 }
-                                    ratingColor.push_back({std::to_string(guessedGame->rating), displayColor});
+                                ratingColor.push_back({std::to_string(guessedGame->rating), displayColor});
                                 // append to vector so that they can be displayed
                                 for (size_t i = 0; i < names.size(); i++) {
                                     float firstRowY = windowSize.y * 0.3f;
@@ -529,7 +529,7 @@ int main() {
                                     ratingDisplays.push_back(TextDisplay(font, ratingStr, 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (6 + 1) + 80 * 6 + 5, firstRowY + (i * spaceBetweenRows)), ratingColor[i].second));
                                 }
                             }
-                            // guessed game found in database but already guessed
+                                // guessed game found in database but already guessed
                             else {
                                 notFound.setText("Already Guessed");
                                 notFound.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.2 + 30));
@@ -539,164 +539,143 @@ int main() {
 
                     else if (mode == "hash") {
                         auto startSearchHash = chrono::high_resolution_clock::now();
-                        Game* guessedGame = &gameMap[inputText];
-                        auto endSearchHash = chrono::high_resolution_clock::now();
-                        timeSearchHash = endSearchHash - startSearchHash;
-                        insertTime.setText("time to search game: " + to_string(timeSearchHash.count()) + "s");
-                        // guessed game is not in database
-                        if (guessedGame == nullptr) {
+
+                        // Check if the game exists in the hashmap
+                        if (!gameMap.contains(inputText)) {
+                            auto endSearchHash = chrono::high_resolution_clock::now();
+                            timeSearchHash = endSearchHash - startSearchHash;
+
+                            insertTime.setText("time to search game: " + to_string(timeSearchHash.count()) + "s");
                             notFound.setText("Game Not Found");
                             notFound.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.2 + 30));
                         }
-                        else if (guessedGame->name == correctGame.name) {
-                            found = true;
-                        }
                         else {
-                            // gussed game found in database... checking if it has been guessed already
-                            if (find(names.begin(), names.end(), inputText) == names.end()) {
-                                // after hitting enter, everything in the search box disappears
-                                inputText = "";
-                                // remove search error from screen
-                                notFound.setPosition(sf::Vector2f(windowSize.x, windowSize.y));
-                                // append all the hint info into vectors
-                                names.push_back(guessedGame->name);
-                                genres.push_back(guessedGame->genres);
-                                platforms.push_back(guessedGame->platforms);
-                                perspectives.push_back(guessedGame->perspectives);
-                                gameModes.push_back(guessedGame->gameModes);
-                                years.push_back(guessedGame->releaseYear);
-                                ratings.push_back(guessedGame->rating);
-                                // replace the comma with \n so they print on different lines
-                                for (int i = 0; i < names.size(); i++) {
-                                    for (size_t pos = 0; (pos = names[i].find(", ", pos)) != string::npos; pos += 1) {
-                                        names[i].replace(pos, 2, "\n");
-                                    }
-                                    for (size_t pos = 0; (pos = genres[i].find(", ", pos)) != string::npos; pos += 1) {
-                                        genres[i].replace(pos, 2, "\n");
-                                    }
-                                    for (size_t pos = 0; (pos = platforms[i].find(", ", pos)) != string::npos; pos += 1) {
-                                        platforms[i].replace(pos, 2, "\n");
-                                    }
-                                    for (size_t pos = 0; (pos = perspectives[i].find(", ", pos)) != string::npos; pos += 1) {
-                                        perspectives[i].replace(pos, 2, "\n");
-                                    }
-                                    for (size_t pos = 0; (pos = gameModes[i].find(", ", pos)) != string::npos; pos += 1) {
-                                        gameModes[i].replace(pos, 2, "\n");
-                                    }
-                                }
-                                sf::Color displayColor;
+                            auto endSearchHash = chrono::high_resolution_clock::now();
+                            timeSearchHash = endSearchHash - startSearchHash;
 
-                                // Compare guessed and correct answers
-                                // name comparison
-                                if (guessedGame->name == correctGame.name) {
-                                    displayColor = sf::Color::Green;
-                                }
-                                else if (guessedGame->name.find(correctGame.name) != string::npos) {
-                                    displayColor = sf::Color::Yellow;
-                                }
-                                else {
-                                    displayColor = sf::Color::Red;
-                                }
-                                nameColor.push_back({guessedGame->name, displayColor});
+                            insertTime.setText("time to search game: " + to_string(timeSearchHash.count()) + "s");
 
-                                // genre comparison
-                                if (guessedGame->genres == correctGame.genres) {
-                                    displayColor = sf::Color::Green;
-                                }
-                                else if (guessedGame->genres.find(correctGame.genres) != string::npos) {
-                                    displayColor = sf::Color::Yellow;
-                                }
-                                else {
-                                    displayColor = sf::Color::Red;
-                                }
-                                genreColor.push_back({guessedGame->genres, displayColor});
+                            // Retrieve the guessed game
+                            Game* guessedGame = &gameMap[inputText];
 
-                                // platform comparison
-                                if (guessedGame->platforms == correctGame.platforms) {
-                                    displayColor = sf::Color::Green;
-                                }
-                                else if (guessedGame->platforms.find(correctGame.platforms) != string::npos) {
-                                    displayColor = sf::Color::Yellow;
-                                }
-                                else {
-                                    displayColor = sf::Color::Red;
-                                }
-                                platformColor.push_back({guessedGame->platforms, displayColor});
-
-                                // perspective comparison
-                                if (guessedGame->perspectives == correctGame.perspectives) {
-                                    displayColor = sf::Color::Green;
-                                }
-                                else if (guessedGame->perspectives.find(correctGame.perspectives) != string::npos) {
-                                    displayColor = sf::Color::Yellow;
-                                }
-                                else {
-                                    displayColor = sf::Color::Red;
-                                }
-                                perspectiveColor.push_back({guessedGame->perspectives, displayColor});
-
-                                // gamemode comparison
-                                if (guessedGame->gameModes == correctGame.gameModes) {
-                                    displayColor = sf::Color::Green;
-                                }
-                                else if (guessedGame->gameModes.find(correctGame.gameModes) != string::npos) {
-                                    displayColor = sf::Color::Yellow;
-                                }
-                                else {
-                                    displayColor = sf::Color::Red;
-                                }
-                                modeColor.push_back({guessedGame->gameModes, displayColor});
-
-                                // year comparison
-                                if (guessedGame->releaseYear == correctGame.releaseYear) {
-                                    displayColor = sf::Color::Green;
-                                }
-                                else {
-                                    displayColor = sf::Color::Red;
-                                }
-                                yearColor.push_back({std::to_string(guessedGame->releaseYear), displayColor});
-
-                                // Compare and assign colors for rating
-                                if (guessedGame->rating == correctGame.rating) {
-                                    displayColor = sf::Color::Green;  // Exact match
-                                }
-                                else {
-                                    displayColor = sf::Color::Red;
-                                }
-                                    ratingColor.push_back({std::to_string(guessedGame->rating), displayColor});
-                                // append to vector so that they can be displayed
-                                for (size_t i = 0; i < names.size(); i++) {
-                                    float firstRowY = windowSize.y * 0.3f;
-                                    float verticalSpace = windowSize.y * 0.9f - firstRowY;
-                                    float spaceBetweenRows = verticalSpace / 6.0f;
-                                    nameDisplays.push_back(TextDisplay(font, names[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (0 + 1) + 80 * 0 + 5, firstRowY + (i * spaceBetweenRows)), nameColor[i].second));
-                                    genreDisplays.push_back(TextDisplay(font, genres[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (1 + 1) + 80 * 1 + 5, firstRowY + (i * spaceBetweenRows)), genreColor[i].second));
-                                    platformDisplays.push_back(TextDisplay(font, platforms[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (2 + 1) + 80 * 2 + 5, firstRowY + (i * spaceBetweenRows)), platformColor[i].second));
-                                    perspectiveDisplays.push_back(TextDisplay(font, perspectives[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (3 + 1) + 80 * 3 + 5, firstRowY + (i * spaceBetweenRows)), perspectiveColor[i].second));
-                                    modeDisplays.push_back(TextDisplay(font, gameModes[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (4 + 1) + 80 * 4 + 5, firstRowY + (i * spaceBetweenRows)), modeColor[i].second));
-
-                                    string yearStr = to_string(years[i]);
-                                    if (years[i] > correctGame.releaseYear) {
-                                        yearStr += " -";
-                                    }
-                                    else if (years[i] < correctGame.releaseYear) {
-                                        yearStr += " +";
-                                    }
-                                    yearDisplays.push_back(TextDisplay(font, yearStr, 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (5 + 1) + 80 * 5 + 5, firstRowY + (i * spaceBetweenRows)), yearColor[i].second));
-                                    string ratingStr = to_string(ratings[i]);
-                                    if (ratings[i] > correctGame.rating) {
-                                        ratingStr += " -";
-                                    }
-                                    else if (ratings[i] < correctGame.rating) {
-                                        ratingStr += " +";
-                                    }
-                                    ratingDisplays.push_back(TextDisplay(font, ratingStr, 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (6 + 1) + 80 * 6 + 5, firstRowY + (i * spaceBetweenRows)), ratingColor[i].second));
-                                }
+                            // Check if the guessed game matches the correct game
+                            if (guessedGame->name == correctGame.name) {
+                                found = true;
                             }
-                            // guessed game found in database but already guessed
                             else {
-                                notFound.setText("Already Guessed");
-                                notFound.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.2 + 30));
+                                // Guessed game is in the database, now check if it has been guessed already
+                                if (find(names.begin(), names.end(), inputText) == names.end()) {
+                                    // Game not guessed before; proceed to process it
+                                    inputText = ""; // Clear the search box
+                                    notFound.setPosition(sf::Vector2f(windowSize.x, windowSize.y)); // Remove search error from screen
+
+                                    // Append the game information into vectors
+                                    names.push_back(guessedGame->name);
+                                    genres.push_back(guessedGame->genres);
+                                    platforms.push_back(guessedGame->platforms);
+                                    perspectives.push_back(guessedGame->perspectives);
+                                    gameModes.push_back(guessedGame->gameModes);
+                                    years.push_back(guessedGame->releaseYear);
+                                    ratings.push_back(guessedGame->rating);
+
+                                    // Replace ", " with "\n" in game attributes for display
+                                    for (size_t i = 0; i < names.size(); i++) {
+                                        for (size_t pos = 0; (pos = names[i].find(", ", pos)) != string::npos; pos += 1) {
+                                            names[i].replace(pos, 2, "\n");
+                                        }
+                                        for (size_t pos = 0; (pos = genres[i].find(", ", pos)) != string::npos; pos += 1) {
+                                            genres[i].replace(pos, 2, "\n");
+                                        }
+                                        for (size_t pos = 0; (pos = platforms[i].find(", ", pos)) != string::npos; pos += 1) {
+                                            platforms[i].replace(pos, 2, "\n");
+                                        }
+                                        for (size_t pos = 0; (pos = perspectives[i].find(", ", pos)) != string::npos; pos += 1) {
+                                            perspectives[i].replace(pos, 2, "\n");
+                                        }
+                                        for (size_t pos = 0; (pos = gameModes[i].find(", ", pos)) != string::npos; pos += 1) {
+                                            gameModes[i].replace(pos, 2, "\n");
+                                        }
+                                    }
+
+                                    sf::Color displayColor;
+
+                                    // Compare guessed and correct answers, and assign colors accordingly
+                                    // Name comparison
+                                    displayColor = (guessedGame->name == correctGame.name)
+                                                   ? sf::Color::Green
+                                                   : (guessedGame->name.find(correctGame.name) != string::npos)
+                                                     ? sf::Color::Yellow
+                                                     : sf::Color::Red;
+                                    nameColor.push_back({guessedGame->name, displayColor});
+
+                                    // Genre comparison
+                                    displayColor = (guessedGame->genres == correctGame.genres)
+                                                   ? sf::Color::Green
+                                                   : (guessedGame->genres.find(correctGame.genres) != string::npos)
+                                                     ? sf::Color::Yellow
+                                                     : sf::Color::Red;
+                                    genreColor.push_back({guessedGame->genres, displayColor});
+
+                                    // Platform comparison
+                                    displayColor = (guessedGame->platforms == correctGame.platforms)
+                                                   ? sf::Color::Green
+                                                   : (guessedGame->platforms.find(correctGame.platforms) != string::npos)
+                                                     ? sf::Color::Yellow
+                                                     : sf::Color::Red;
+                                    platformColor.push_back({guessedGame->platforms, displayColor});
+
+                                    // Perspective comparison
+                                    displayColor = (guessedGame->perspectives == correctGame.perspectives)
+                                                   ? sf::Color::Green
+                                                   : (guessedGame->perspectives.find(correctGame.perspectives) != string::npos)
+                                                     ? sf::Color::Yellow
+                                                     : sf::Color::Red;
+                                    perspectiveColor.push_back({guessedGame->perspectives, displayColor});
+
+                                    // Game mode comparison
+                                    displayColor = (guessedGame->gameModes == correctGame.gameModes)
+                                                   ? sf::Color::Green
+                                                   : (guessedGame->gameModes.find(correctGame.gameModes) != string::npos)
+                                                     ? sf::Color::Yellow
+                                                     : sf::Color::Red;
+                                    modeColor.push_back({guessedGame->gameModes, displayColor});
+
+                                    // Year comparison
+                                    displayColor = (guessedGame->releaseYear == correctGame.releaseYear) ? sf::Color::Green : sf::Color::Red;
+                                    yearColor.push_back({std::to_string(guessedGame->releaseYear), displayColor});
+
+                                    // Rating comparison
+                                    displayColor = (guessedGame->rating == correctGame.rating) ? sf::Color::Green : sf::Color::Red;
+                                    ratingColor.push_back({std::to_string(guessedGame->rating), displayColor});
+
+                                    // Append text displays for game information
+                                    for (size_t i = 0; i < names.size(); i++) {
+                                        float firstRowY = windowSize.y * 0.3f;
+                                        float verticalSpace = windowSize.y * 0.9f - firstRowY;
+                                        float spaceBetweenRows = verticalSpace / 6.0f;
+
+                                        nameDisplays.push_back(TextDisplay(font, names[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (0 + 1) + 80 * 0 + 5, firstRowY + (i * spaceBetweenRows)), nameColor[i].second));
+                                        genreDisplays.push_back(TextDisplay(font, genres[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (1 + 1) + 80 * 1 + 5, firstRowY + (i * spaceBetweenRows)), genreColor[i].second));
+                                        platformDisplays.push_back(TextDisplay(font, platforms[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (2 + 1) + 80 * 2 + 5, firstRowY + (i * spaceBetweenRows)), platformColor[i].second));
+                                        perspectiveDisplays.push_back(TextDisplay(font, perspectives[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (3 + 1) + 80 * 3 + 5, firstRowY + (i * spaceBetweenRows)), perspectiveColor[i].second));
+                                        modeDisplays.push_back(TextDisplay(font, gameModes[i], 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (4 + 1) + 80 * 4 + 5, firstRowY + (i * spaceBetweenRows)), modeColor[i].second));
+
+                                        string yearStr = to_string(years[i]);
+                                        if (years[i] > correctGame.releaseYear) yearStr += " -";
+                                        else if (years[i] < correctGame.releaseYear) yearStr += " +";
+                                        yearDisplays.push_back(TextDisplay(font, yearStr, 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (5 + 1) + 80 * 5 + 5, firstRowY + (i * spaceBetweenRows)), yearColor[i].second));
+
+                                        string ratingStr = to_string(ratings[i]);
+                                        if (ratings[i] > correctGame.rating) ratingStr += " -";
+                                        else if (ratings[i] < correctGame.rating) ratingStr += " +";
+                                        ratingDisplays.push_back(TextDisplay(font, ratingStr, 12, sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (6 + 1) + 80 * 6 + 5, firstRowY + (i * spaceBetweenRows)), ratingColor[i].second));
+                                    }
+                                }
+                                else {
+                                    // Guessed game is already guessed
+                                    notFound.setText("Already Guessed");
+                                    notFound.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.2 + 30));
+                                }
                             }
                         }
                     }
