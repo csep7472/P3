@@ -39,6 +39,12 @@ public:
     void draw(sf::RenderWindow& window) {
         window.draw(text);
     }
+    void setOutlineColor(const sf::Color color) {
+        text.setOutlineColor(color);
+    }
+    void setOutlineThickness(const float thickness) {
+        text.setOutlineThickness(thickness);
+    }
 };
 
 
