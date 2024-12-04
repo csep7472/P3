@@ -54,13 +54,13 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 28,
+				"line" : 29,
 				"parent" : 0
 			},
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 27,
+				"line" : 28,
 				"parent" : 0
 			},
 			{
@@ -198,7 +198,7 @@
 			{
 				"command" : 6,
 				"file" : 1,
-				"line" : 33,
+				"line" : 34,
 				"parent" : 0
 			},
 			{
@@ -242,7 +242,7 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 31,
+				"line" : 32,
 				"parent" : 0
 			}
 		]
@@ -429,7 +429,8 @@
 				1,
 				2,
 				4,
-				5
+				5,
+				6
 			]
 		}
 	],
@@ -465,6 +466,11 @@
 		{
 			"backtrace" : 2,
 			"path" : "src/hashmap.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 2,
+			"path" : "src/trie.h",
 			"sourceGroupIndex" : 1
 		}
 	],

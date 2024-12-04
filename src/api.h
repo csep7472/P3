@@ -8,7 +8,7 @@
 // Game class definition
 class Game {
 public:
-    double rating = 0.0;              
+    double rating = 0.0;
     std::string name;                 
     std::string genres;               
     std::string platforms;            

@@ -21,6 +21,7 @@ add_executable(Main
         src/api.cpp
         src/GUI.h
         src/hashmap.h
+        src/trie.h
 )
 
 # Link libraries using keyword signature
