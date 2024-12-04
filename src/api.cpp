@@ -31,6 +31,17 @@ std::string joinArray(const nlohmann::json& array, const std::string& key) {
     return result;
 }
 
+std::vector<std::string> splitString(const std::string& str, const std::string& separator) {
+    std::vector<std::string> items;
+    size_t start = 0, end;
+    while ((end = str.find(separator, start)) != std::string::npos) {
+        items.push_back(str.substr(start, end - start));
+        start = end + separator.length();
+    }
+    items.push_back(str.substr(start));
+    return items;
+}
+
 // Fetch games data from the API
 std::vector<Game> getGamesList() {
     std::string output;
@@ -42,9 +53,13 @@ std::vector<Game> getGamesList() {
         headers = curl_slist_append(headers, "Client-ID: fb89fyfzjfsfqmfmre5akrssfnfdyq");
         headers = curl_slist_append(headers, "Authorization: Bearer nddadgrn6sj42d7feurnu84d0cnkih");
 
-        int limit = 500;
+        int limit = 500;  
         int offset = 0;   
         bool moreResults = true;
+        std::string genres = "";
+        std::string perspectives = "";
+        std::string platforms = "";
+        std::string gameModes = "";
 
         while (moreResults) {
             output.clear();
@@ -84,19 +99,23 @@ std::vector<Game> getGamesList() {
                         }
 
                         if (gameJson.contains("genres")) {
-                            game.genres = joinArray(gameJson["genres"], "name");
+                            genres = joinArray(gameJson["genres"], "name");
+                            game.genres = splitString(genres, ", ");
                         }
 
                         if (gameJson.contains("platforms")) {
-                            game.platforms = joinArray(gameJson["platforms"], "name");
+                            platforms = joinArray(gameJson["platforms"], "name");
+                            game.platforms = splitString(platforms, ", ");
                         }
 
                         if (gameJson.contains("game_modes")) {
-                            game.gameModes = joinArray(gameJson["game_modes"], "name");
+                            gameModes = joinArray(gameJson["game_modes"], "name");
+                            game.gameModes = splitString(gameModes, ", ");
                         }
 
                         if (gameJson.contains("player_perspectives")) {
-                            game.perspectives = joinArray(gameJson["player_perspectives"], "name");
+                            perspectives = joinArray(gameJson["player_perspectives"], "name");
+                            game.perspectives = splitString(perspectives, ", ");
                         }
 
                         if (gameJson.contains("release_dates") && !gameJson["release_dates"].empty()) {
@@ -116,7 +135,7 @@ std::vector<Game> getGamesList() {
                     break;
                 }
             }
-            if (offset >= 0) {
+            if (offset >= 15000) {
                 moreResults = false;
             }
             sleep_for(0.5s); //included because there is a max amount of requests per second and dont want to exceed it
