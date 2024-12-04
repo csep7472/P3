@@ -178,7 +178,6 @@ int main() {
         hints[i].setFillColor(sf::Color::White);
         hints[i].setPosition((windowSize.x - (7 * 80)) / 8.0f * (i + 1) + 80 * i, windowSize.y * 0.25);
     }
-    vector<string> list {"Name", "Genres", "Platform", "Perspectives", "Game Modes", "Release Year", "Ratings"};
     vector<TextDisplay> hint_displays;
     TextDisplay name("Name", 12,sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (0 + 1) + 80 * 0 + 5, windowSize.y * 0.26), sf::Color::Black);
     TextDisplay genre("Genres", 12,sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (1 + 1) + 80 * 1 + 5, windowSize.y * 0.26), sf::Color::Black);
@@ -188,11 +187,14 @@ int main() {
     TextDisplay year("Release Year", 12,sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (5 + 1) + 80 * 5 + 5, windowSize.y * 0.26), sf::Color::Black);
     TextDisplay rating("Ratings", 12,sf::Vector2f((windowSize.x - (7 * 80)) / 8.0f * (6 + 1) + 80 * 6 + 5, windowSize.y * 0.26), sf::Color::Black);
 
+    // game not found
+    TextDisplay notFound("Game Not Found", 12, sf::Vector2f(0, 0), sf::Color::Red);
 
-
+    // game stuff
     bool gameStarted = false;
     string inputText = "";
     string mode = "";
+    vector<string> guesses;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -243,10 +245,18 @@ int main() {
                 else if (event.text.unicode == '\r' && inputText.size() > 0) {
                     if (mode == "splay") {
                         if (splaytree.search(inputText) == nullptr) {
-                            cout << "Not Found" << endl;
+                            notFound.setText("Game Not Found");
+                            notFound.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.2 + 30));
                         }
                         else {
-                            cout << "Found" << endl;
+                            if (find(guesses.begin(), guesses.end(), inputText) == guesses.end()) {
+                                guesses.push_back(inputText);
+                                notFound.setPosition(sf::Vector2f(0, 0));
+                            }
+                            else {
+                                notFound.setText("Already Guessed");
+                                notFound.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.2 + 30));
+                            }
                         }
                     }
 
@@ -293,6 +303,7 @@ int main() {
             down.draw(window);
             input.draw(window);
             guessText.draw(window);
+            notFound.draw(window);
             window.display();
         }
         else {
