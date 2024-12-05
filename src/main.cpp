@@ -26,7 +26,7 @@ int main() {
     cout << correctGame.name << endl;
     SplayTree splaytree;
     HashMap<string, Game> gameMap(100);  // Create a HashMap with 100 buckets
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle");
 
     // gets window size to dynamically adjust text and button locations
     sf::Vector2u windowSize = window.getSize();
@@ -242,6 +242,7 @@ int main() {
                 }
 
                 else if (restartButton.getGlobalBounds().contains(mousePosF) && gameStarted) {
+                    found = false;
                     inputText = "Enter Your Guess Here!";
                     input.setText(inputText);
 
@@ -271,6 +272,7 @@ int main() {
 
                     correctGame = allGames[rand() % allGames.size()];
                     notFound.setText("");
+                    cout << correctGame.name << endl;
                     notFound.setPosition(sf::Vector2f(windowSize.x, windowSize.y));
                     correct.setPosition(sf::Vector2f(windowSize.x, windowSize.y));
                 }
@@ -292,9 +294,6 @@ int main() {
                         if (guessedGame == nullptr) {
                             notFound.setText("Game Not Found");
                             notFound.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.2 + 30));
-                        }
-                        else if (guessedGame->name == correctGame.name) {
-                            found = true;
                         }
                         else {
                             // gussed game found in database... checking if it has been guessed already
@@ -469,7 +468,8 @@ int main() {
 
                             // Check if the guessed game matches the correct game
                             if (guessedGame->name == correctGame.name) {
-                                found = true;
+                                found == true;
+                                break;
                             }
                             else {
                                 // Guessed game is in the database, now check if it has been guessed already
@@ -598,7 +598,7 @@ int main() {
                 input.setText(inputText);
             }
 
-            if (names.size() >= 7 && !found) {
+            if (names.size() >= 7) {
                 correct.setPosition(sf::Vector2f((windowSize.x - searchBox.getSize().x) / 2, windowSize.y * 0.18));
             }
         }
