@@ -26,7 +26,7 @@ int main() {
     cout << correctGame.name << endl;
     SplayTree splaytree;
     HashMap<string, Game> gameMap(100);  // Create a HashMap with 100 buckets
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle");
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Video Game Wordle", sf::Style::Fullscreen);
 
     // gets window size to dynamically adjust text and button locations
     sf::Vector2u windowSize = window.getSize();
